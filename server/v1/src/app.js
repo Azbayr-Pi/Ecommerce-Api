@@ -4,6 +4,7 @@ const passport = require('passport');
 const usersRouter = require('../routes/users/usersRouter');
 const productsRouter = require('../routes/products/productsRouter');
 const ordersRouter = require('../routes/orders/ordersRouter');
+const categoriesRouter = require('../routes/categories/categoriesRouter');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const loginRouter = require('../routes/Auth/loginRoute');
@@ -39,6 +40,7 @@ app.use(passport.session());
 app.use('/api/v1', loginRouter);
 app.use('/api/v1', registerRouter);
 
+app.use('/api/v1/categories', categoriesRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/products', productsRouter);
 app.use('/api/v1/orders', ordersRouter);

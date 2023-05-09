@@ -5,6 +5,7 @@ const usersRouter = require('../routes/users/usersRouter');
 const productsRouter = require('../routes/products/productsRouter');
 const ordersRouter = require('../routes/orders/ordersRouter');
 const categoriesRouter = require('../routes/categories/categoriesRouter');
+const reviewsRouter = require('../routes/reviews/reviewsRoute');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const loginRouter = require('../routes/Auth/loginRoute');
@@ -44,6 +45,7 @@ app.use('/api/v1/categories', categoriesRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/products', productsRouter);
 app.use('/api/v1/orders', ordersRouter);
+app.use('/api/v1/products/:id/reviews', reviewsRouter);
 
 app.get('/*', (req, res) => {
     res.send('Not found :"(');

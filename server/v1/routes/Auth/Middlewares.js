@@ -73,12 +73,12 @@ const deleteUserOrder = async (userId, orderId) => {
 
 //The below function will check if a user is the owner of a product or not.
 const checkSeller = async (productId, userId) => {
-    const product = await Product.findById(productId).populate('seller');
+    const product = await Product.findById(productId).lean();
     if (product) {
-        if (product.seller[0]._id.toString() === userId) {
-            return false;
+        if (product.seller[0]._id.toString() !== userId) {
+            return product;
         } else {
-            return true;
+            throw new Error('You cannnot give a review to your own product.');
         }
     } else {
         throw new Error('Product not found');

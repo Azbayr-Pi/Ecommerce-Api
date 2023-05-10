@@ -71,6 +71,27 @@ const deleteUserOrder = async (userId, orderId) => {
     }
 };
 
+//The below function will check if a user is the owner of a product or not.
+const checkSeller = async (productId, userId) => {
+    const product = await Product.findById(productId).populate('seller');
+    if (product) {
+        if (product.seller[0]._id.toString() === userId) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        throw new Error('Product not found');
+    }
+};
+
+//The below function will check if a rating is valid or not.
+const checkRating = (rating) => {
+    if (typeof rating !== 'number' || rating < 1 || rating > 5) {
+      throw new Error('Invalid rating value. Rating must be a number between 1 and 5.');
+    }
+};
+
 module.exports = {
     isAuthenticated,
     deleteUserProduct,
@@ -78,4 +99,6 @@ module.exports = {
     isUser,
     processNewItems,
     deleteUserOrder,
+    checkSeller,
+    checkRating
 }

@@ -44,6 +44,7 @@ const productSchema = new Schema({
     },
     reviews: {
         type: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
+        required: false,
     },
     postedDate: {
         type: Date,

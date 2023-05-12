@@ -1,6 +1,7 @@
 const User = require('../../config/usersSchema');
 const Order = require('../../config/ordersSchema');
 const Product = require('../../config/productsSchema');
+const Review = require('../../config/reviewsSchema');
 
 // isAuthenticated function checks if a user logged in or not.
 const isAuthenticated = (req, res, next) => {
@@ -73,24 +74,73 @@ const deleteUserOrder = async (userId, orderId) => {
 
 //The below function will check if a user is the owner of a product or not.
 const checkSeller = async (productId, userId) => {
-    const product = await Product.findById(productId).lean();
+    const product = await checkProductId(productId);
     if (product) {
         if (product.seller[0]._id.toString() !== userId) {
             return product;
         } else {
-            throw new Error('You cannnot give a review to your own product.');
+            throw new Error('You cannnot give a review to your own product.'); 
         }
-    } else {
-        throw new Error('Product not found');
+    } else {    
+        throw new Error('Product not found!');
     }
 };
 
 //The below function will check if a rating is valid or not.
-const checkRating = (rating) => {
+const checkRating = (rating, comment) => {
     if (typeof rating !== 'number' || rating < 1 || rating > 5) {
       throw new Error('Invalid rating value. Rating must be a number between 1 and 5.');
-    }
+    } else if (!comment) {
+        throw new Error('Comment is required.');
+    } 
+    return;
 };
+
+const isReviewer = async (req, res, next) => {
+    try {
+        const { reviewId } = req.params;
+        const user = req.user._id.toString();
+        const review = await Review.findById(reviewId);
+        if (review) {
+            if (review.userId._id.toString() === user) {
+                next();
+            } else {
+                res.status(401).json(
+                    {
+                        message: 'Unauthorized you are not the owner of this review!' 
+                    }
+                );
+            }
+        } else {
+            res.status(404).json({
+                message: 'Review not found!'
+            });
+        }
+    } catch (err) {
+        res.status(500).json(
+            { message: err.message }
+        );
+    }
+}
+
+// the below function will check if a product exists or not.
+const checkProductId = async (productId) => {
+    const product = await Product.findById(productId);
+    if (!product) {
+        throw new Error('Product not found!');
+    }
+    return product;
+}
+
+// the below function will check if a review exists or not.
+const checkReviewId = (product, reviewId) => {
+    const review = product.reviews.map(review => review._id.toString()).includes(reviewId);
+    if (review === -1) {
+        // throw new Error('Review not found!');   
+        return false;
+    }
+    return true;
+}
 
 module.exports = {
     isAuthenticated,
@@ -100,5 +150,8 @@ module.exports = {
     processNewItems,
     deleteUserOrder,
     checkSeller,
-    checkRating
+    checkRating,
+    isReviewer,
+    checkReviewId,
+    checkProductId,
 }

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const conn = "mongodb://127.0.0.1:27017/Ecommerce-Api";
 
@@ -17,13 +17,13 @@ const { Schema } = mongoose;
 
 async function genPassword(password) {
     const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(password, salt);
+    const salt = await bcrypt.genSaltSync(saltRounds);
+    const hash = await bcrypt.hashSync(password, salt);
     return { salt, hash };
 }
 
 async function validatePassword(password, hash, salt) {
-    const match = await bcrypt.compare(password, hash);
+    const match = await bcrypt.compareSync(password, hash);
     return match;
 }
 

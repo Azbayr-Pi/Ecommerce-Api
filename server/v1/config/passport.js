@@ -3,11 +3,11 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('./usersSchema');
 
 
-const verifyCallBack = (username, password, done) => {
+const verifyCallBack = async (username, password, done) => {
   User.findOne({ username: username })
-    .then((user) => { 
+    .then(async (user) => { 
       if (!user) return done(null, false);
-      const isvalid = user.isValidPassword(password);
+      const isvalid = await user.isValidPassword(password);
       if (isvalid) {
         return done(null, user); 
       } else {

@@ -3,11 +3,6 @@ const loginRouter = express.Router();
 const path = require('path');
 const passport = require('passport');
 
-
-loginRouter.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', '..', 'views', 'login.html'));
-});
-
 loginRouter.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {

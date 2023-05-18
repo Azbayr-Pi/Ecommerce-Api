@@ -1,14 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('./database');
 
-const conn = "mongodb://127.0.0.1:27017/Ecommerce-Api";
-
-mongoose.connect(conn)
-    .then(() => {
-        console.log('Connected to database');
-    })
-    .catch((err) => {
-        console.log('Failed to connect to database', err);
-    });
 const { Schema } = mongoose;
 
 const productSchema = new Schema({

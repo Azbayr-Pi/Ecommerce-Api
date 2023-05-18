@@ -1,9 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require('./database');
 const cron = require('node-cron');
 
 const { Schema } = mongoose;
-
-const conn = "mongodb://127.0.0.1:27017/Ecommerce-Api";
 
 const orderItemSchema = new Schema({
     product: {

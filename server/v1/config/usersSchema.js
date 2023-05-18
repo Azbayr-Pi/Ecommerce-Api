@@ -1,16 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('./database');
 const bcrypt = require('bcryptjs');
-
-const conn = "mongodb://127.0.0.1:27017/Ecommerce-Api";
-
-mongoose.connect(conn)
-    .then(() => {
-        console.log('Connected to database');
-        console.log(conn);
-    })
-    .catch((err) => {
-        console.log('Failed to connect to database', err);
-    });
 
 const { Schema } = mongoose;
 

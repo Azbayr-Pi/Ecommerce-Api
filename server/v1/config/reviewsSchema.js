@@ -1,6 +1,4 @@
-const mongoose = require('mongoose');
-
-const conn = "mongodb://127.0.0.1:27017/Ecommerce-Api";
+const mongoose = require('./database');
 
 const { Schema } = mongoose;
 

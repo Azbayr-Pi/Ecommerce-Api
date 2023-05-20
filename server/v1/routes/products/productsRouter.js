@@ -7,14 +7,14 @@ const { showAllProducts,
     deleteProduct,
 } = require('./productsController');
 const productRouter = express.Router();
-const { isAuthenticated } = require('../Auth/Middlewares');
+const { isAuthenticated, checkIfProductOwner } = require('../Auth/Middlewares');
 
 
 productRouter.get('/', showAllProducts); 
 productRouter.get('/:id', showProductById);
 productRouter.post('/addProduct', isAuthenticated, addProduct);
-productRouter.put('/:id/edit', isAuthenticated, updateProduct);
-productRouter.delete('/:id/delete', isAuthenticated, deleteProduct);
+productRouter.put('/:id/edit', isAuthenticated, checkIfProductOwner, updateProduct);
+productRouter.delete('/:id/delete', isAuthenticated, checkIfProductOwner, deleteProduct);
 
 
 

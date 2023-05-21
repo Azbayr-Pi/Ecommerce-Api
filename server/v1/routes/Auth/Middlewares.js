@@ -3,6 +3,8 @@ const Order = require('../../config/ordersSchema');
 const Product = require('../../config/productsSchema');
 const Review = require('../../config/reviewsSchema');
 
+const { ObjectId } = require('mongoose').Types;
+
 // isAuthenticated function checks if a user logged in or not.
 const isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
@@ -11,12 +13,33 @@ const isAuthenticated = (req, res, next) => {
     res.status(401).json({ message: 'Unauthorized you have to be logged in first!' });
 };
 
+const findUserById = async (id) => {
+    const user = await User.findById(id);
+    if (!user) {
+        res.status(404).json({ message: 'User not found!' });
+    }
+    return user;
+}
+
+const checkIfProductOwner = async (req, res, next) => {
+    const user = await findUserById(req.user._id.toString());
+    const index = user.products.findIndex(p => p._id.equals(req.params.id));
+    console.log(index);
+    if (index === -1) {
+        res.status(401).json({ message: 'Unauthorized you are not the owner of this product!' });
+    } else {
+        next();
+    }
+}
+
 // deleteUserProduct function removes productId off of products array of a user.
 const deleteUserProduct = async (userId, productId) => {
     const user = await User.findById(userId).lean();
     if (!user) throw new Error('User not found!');
     const updatedProducts = user.products.filter(p => p.toString() !== productId);
-    await User.findByIdAndUpdate(userId, { products: updatedProducts });
+    const updatedUser = await User.findByIdAndUpdate(userId, 
+        { products: updatedProducts }, { new: true, runValidators: true }
+    );
 };   
 
 //The below function adds orderId to orders array of a user.
@@ -144,6 +167,7 @@ const checkReviewId = (product, reviewId) => {
 
 module.exports = {
     isAuthenticated,
+    checkIfProductOwner,
     deleteUserProduct,
     addUserOrders,
     isUser,

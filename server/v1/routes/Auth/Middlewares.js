@@ -3,8 +3,6 @@ const Order = require('../../config/ordersSchema');
 const Product = require('../../config/productsSchema');
 const Review = require('../../config/reviewsSchema');
 
-const { ObjectId } = require('mongoose').Types;
-
 // isAuthenticated function checks if a user logged in or not.
 const isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {

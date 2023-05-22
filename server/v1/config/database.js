@@ -6,7 +6,7 @@ const password = process.env.DB_PASSWORD;
 const host = process.env.DB_HOST;
 const dbName = process.env.DB_NAME;
 
-const connectionString = `mongodb://${username}:${password}@${host}:27017/${dbName}`;
+const connectionString = `mongodb://${username}:${password}@${host}:27017/${dbName}?authSource=admin`;
 
 mongoose.connect(connectionString).then(
   () => { 
